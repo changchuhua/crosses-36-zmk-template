@@ -1,62 +1,214 @@
+/*
+ * Miryoku-style Keymap for Crosses (36-key)
+ * QWERTY Alphas + Colemak-style Layers
+ */
+
 #include <behaviors.dtsi>
-#include <dt-bindings/zmk/bt.h>
 #include <dt-bindings/zmk/keys.h>
-#include <dt-bindings/zmk/pointing.h>
+#include <dt-bindings/zmk/bt.h>
+#include <dt-bindings/zmk/mouse.h>
+#include <dt-bindings/zmk/outputs.h>
+
+#define BASE 0
+#define NAV  1
+#define MSE  2
+#define MED  3
+#define NUM  4
+#define SYM  5
+#define FUN  6
+
+&mt {
+    quick-tap-ms = <200>;
+    require-prior-idle-ms = <150>;
+    flavor = "tap-preferred";
+};
+
+&lt {
+    quick-tap-ms = <200>;
+    require-prior-idle-ms = <150>;
+    flavor = "tap-preferred";
+};
 
 / {
-    chosen { zmk,physical-layout = &gggw_crosses_36_layout; };
-
-    behaviors {
-        as: auto_shift {
-            compatible = "zmk,behavior-hold-tap";
-            #binding-cells = <2>;
-            tapping_term_ms = <200>;
-            quick_tap_ms = <0>;
-            flavor = "tap-preferred";
-            bindings = <&kp>, <&kp>;
-        };
-    };
-
     keymap {
         compatible = "zmk,keymap";
 
+        /* * BASE LAYER (QWERTY)
+         * Home Row Mods: GUI, ALT, CTRL, SHIFT
+         */
         default_layer {
-            display-name = "Base";
             bindings = <
-&as Q LS(Q)  &as W LS(W)  &as E LS(E)     &as R LS(R)  &as T LS(T)  &as Y LS(Y)  &as U LS(U)  &as I LS(I)  &as O LS(O)  &as P LS(P)
-&as A LS(A)  &as S LS(S)  &as D LS(D)     &as F LS(F)  &as G LS(G)  &as H LS(H)  &as J LS(J)  &as K LS(K)  &as L LS(L)  &as SQT LS(SQT)
-&as Z LS(Z)  &as X LS(X)  &as C LS(C)     &as V LS(V)  &as B LS(B)  &as N LS(N)  &as M LS(M)  &kp RCTRL    &kp RALT     &as DOT LS(DOT)
-                          &lt 3 LEFT_GUI  &mo 1        &kp SPACE    &kp RET      &mo 2        &kp BSPC
+   &kp Q        &kp W        &kp E        &kp R        &kp T          &kp Y        &kp U        &kp I        &kp O        &kp P
+   &mt LGUI A   &mt LALT S   &mt LCTRL D  &mt LSHFT F  &kp G          &kp H        &mt RSHFT J  &mt RCTRL K  &mt RALT L   &mt RGUI SEMI
+   &kp Z        &kp X        &kp C        &kp V        &kp B          &kp N        &kp M        &kp COMMA    &kp DOT      &kp FSLH
+                             &lt MED ESC  &lt NAV SPC  &lt MSE TAB    &lt SYM RET  &lt NUM BSPC &lt FUN DEL
             >;
         };
 
-        lower_layer {
-            display-name = "Lower";
+        /* NAV LAYER (Left Thumb Hold) */
+        nav_layer {
             bindings = <
-&kp EXCL      &kp AT        &kp HASH      &kp DLLR      &kp PRCNT     &kp CARET  &kp AMPS  &kp ASTRK  &kp LPAR   &kp RPAR
-&bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3  &bt BT_SEL 4  &kp LEFT   &kp DOWN  &kp UP           &kp RIGHT  &trans
-&bt BT_CLR    &trans        &trans        &trans        &trans        &trans     &trans    &trans           &trans     &trans
-                            &kp LGUI      &trans        &kp SPACE     &kp RET    &kp ESC   &kp TAB
+   &none        &none        &none        &none        &none          &kp K_APP    &kp HOME     &kp END      &kp PG_DN    &kp PG_UP
+   &kp LGUI     &kp LALT     &kp LCTRL    &kp LSHFT    &none          &kp CAPS     &kp LEFT     &kp DOWN     &kp UP       &kp RIGHT
+   &none        &none        &none        &none        &none          &kp INS      &kp HOME     &kp PG_DN    &kp PG_UP    &kp END
+                             &none        &none        &none          &kp RET      &kp BSPC     &kp DEL
             >;
         };
 
-        raise_layer {
-            display-name = "Raise";
-            bindings = <
-&as N1 EXCL      &as N2 AT       &as N3 HASH  &as N4 DOLLAR        &as N5 PERCENT  &as N6 CARET  &as N7 AMPS           &as N8 ASTRK  &as N9 LEFT_PARENTHESIS  &as N0 RIGHT_PARENTHESIS
-&as MINUS UNDER  &as EQUAL PLUS  &kp LBRC     &kp LBKT             &kp LPAR        &kp RPAR      &kp RBKT              &kp RBRC      &as FSLH QUESTION        &as BSLH PIPE
-&as GRAVE TILDE  &trans          &trans       &as COMMA LESS_THAN  &kp COLON       &kp SEMI      &as DOT GREATER_THAN  &kp LCTRL     &kp RALT                 &trans
-                                 &kp LGUI     &kp ESC              &kp SPACE       &kp RET       &trans                &kp TAB
-            >;
-        };
-
+        /* MOUSE LAYER (Left Thumb Inner Hold) - Uses Trackball Buttons */
         mouse_layer {
-            display-name = "Mouse";
             bindings = <
-&trans  &trans     &trans     &trans     &trans  &trans  &trans  &trans  &trans  &trans
-&trans  &mkp RCLK  &mkp MCLK  &mkp LCLK  &trans  &trans  &trans  &trans  &trans  &trans
-&trans  &trans     &trans     &trans     &trans  &trans  &trans  &trans  &trans  &trans
-                   &trans     &trans     &trans  &trans  &trans  &trans
+   &none        &none        &none        &none        &none          &none        &none        &none        &none        &none
+   &kp LGUI     &kp LALT     &kp LCTRL    &kp LSHFT    &none          &none        &mkp MB1     &mkp MB2     &mkp MB3     &none
+   &none        &none        &none        &none        &none          &none        &none        &none        &none        &none
+                             &none        &none        &none          &mkp MB1     &mkp MB2     &mkp MB3
+            >;
+        };
+
+        /* MEDIA LAYER (Left Thumb Outer Hold) */
+        media_layer {
+            bindings = <
+   &none        &none        &none        &none        &none          &none        &none        &none        &none        &none
+   &kp LGUI     &kp LALT     &kp LCTRL    &kp LSHFT    &none          &none        &kp C_PREV   &kp C_VOL_DN &kp C_VOL_UP &kp C_NEXT
+   &none        &none        &none        &none        &none          &none        &none        &none        &none        &none
+                             &none        &none        &none          &kp C_STOP   &kp C_PP     &kp C_MUTE
+            >;
+        };
+
+        /* NUM LAYER (Right Thumb Hold) */
+        num_layer {
+            bindings = <
+   &kp LBKT     &kp N7       &kp N8       &kp N9       &kp RBKT       &none        &none        &none        &none        &none
+   &kp SEMI     &kp N4       &kp N5       &kp N6       &kp EQUAL      &none        &kp RSHFT    &kp RCTRL    &kp RALT     &kp RGUI
+   &kp GRAVE    &kp N1       &kp N2       &kp N3       &kp BSLH       &none        &none        &none        &none        &none
+                             &kp DOT      &kp N0       &kp MINUS      &none        &none        &none
+            >;
+        };
+
+        /* SYM LAYER (Right Thumb Inner Hold) */
+        sym_layer {
+            bindings = <
+   &kp LBRC     &kp AMPS     &kp STAR     &kp LPAR     &kp RBRC       &none        &none        &none        &none        &none
+   &kp COLON    &kp DLLR     &kp PRCNT    &kp CARET    &kp PLUS       &none        &kp RSHFT    &kp RCTRL    &kp RALT     &kp RGUI
+   &kp TILDE    &kp EXCL     &kp AT       &kp HASH     &kp PIPE       &none        &none        &none        &none        &none
+                             &kp LPAR     &kp RPAR     &kp UNDER      &none        &none        &none
+            >;
+        };
+
+        /* FUN LAYER (Right Thumb Outer Hold) */
+        fun_layer {
+            bindings = <
+   &kp F12      &kp F7       &kp F8       &kp F9       &kp PSCRN      &none        &none        &none        &none        &none
+   &kp F11      &kp F4       &kp F5       &kp F6       &kp SLCK       &none        &kp RSHFT    &kp RCTRL    &kp RALT     &kp RGUI
+   &kp F10      &kp F1       &kp F2       &kp F3       &kp PAUSE_BREAK &none       &none        &none        &none        &none
+                             &kp K_APP    &kp SPACE    &kp TAB        &none        &none        &none
+            >;
+        };
+    };
+};/*
+ * Miryoku-style Keymap for Crosses (36-key)
+ * QWERTY Alphas + Colemak-style Layers
+ */
+
+#include <behaviors.dtsi>
+#include <dt-bindings/zmk/keys.h>
+#include <dt-bindings/zmk/bt.h>
+#include <dt-bindings/zmk/mouse.h>
+#include <dt-bindings/zmk/outputs.h>
+
+#define BASE 0
+#define NAV  1
+#define MSE  2
+#define MED  3
+#define NUM  4
+#define SYM  5
+#define FUN  6
+
+&mt {
+    quick-tap-ms = <200>;
+    require-prior-idle-ms = <150>;
+    flavor = "tap-preferred";
+};
+
+&lt {
+    quick-tap-ms = <200>;
+    require-prior-idle-ms = <150>;
+    flavor = "tap-preferred";
+};
+
+/ {
+    keymap {
+        compatible = "zmk,keymap";
+
+        /* * BASE LAYER (QWERTY)
+         * Home Row Mods: GUI, ALT, CTRL, SHIFT
+         */
+        default_layer {
+            bindings = <
+   &kp Q        &kp W        &kp E        &kp R        &kp T          &kp Y        &kp U        &kp I        &kp O        &kp P
+   &mt LGUI A   &mt LALT S   &mt LCTRL D  &mt LSHFT F  &kp G          &kp H        &mt RSHFT J  &mt RCTRL K  &mt RALT L   &mt RGUI SEMI
+   &kp Z        &kp X        &kp C        &kp V        &kp B          &kp N        &kp M        &kp COMMA    &kp DOT      &kp FSLH
+                             &lt MED ESC  &lt NAV SPC  &lt MSE TAB    &lt SYM RET  &lt NUM BSPC &lt FUN DEL
+            >;
+        };
+
+        /* NAV LAYER (Left Thumb Hold) */
+        nav_layer {
+            bindings = <
+   &none        &none        &none        &none        &none          &kp K_APP    &kp HOME     &kp END      &kp PG_DN    &kp PG_UP
+   &kp LGUI     &kp LALT     &kp LCTRL    &kp LSHFT    &none          &kp CAPS     &kp LEFT     &kp DOWN     &kp UP       &kp RIGHT
+   &none        &none        &none        &none        &none          &kp INS      &kp HOME     &kp PG_DN    &kp PG_UP    &kp END
+                             &none        &none        &none          &kp RET      &kp BSPC     &kp DEL
+            >;
+        };
+
+        /* MOUSE LAYER (Left Thumb Inner Hold) - Uses Trackball Buttons */
+        mouse_layer {
+            bindings = <
+   &none        &none        &none        &none        &none          &none        &none        &none        &none        &none
+   &kp LGUI     &kp LALT     &kp LCTRL    &kp LSHFT    &none          &none        &mkp MB1     &mkp MB2     &mkp MB3     &none
+   &none        &none        &none        &none        &none          &none        &none        &none        &none        &none
+                             &none        &none        &none          &mkp MB1     &mkp MB2     &mkp MB3
+            >;
+        };
+
+        /* MEDIA LAYER (Left Thumb Outer Hold) */
+        media_layer {
+            bindings = <
+   &none        &none        &none        &none        &none          &none        &none        &none        &none        &none
+   &kp LGUI     &kp LALT     &kp LCTRL    &kp LSHFT    &none          &none        &kp C_PREV   &kp C_VOL_DN &kp C_VOL_UP &kp C_NEXT
+   &none        &none        &none        &none        &none          &none        &none        &none        &none        &none
+                             &none        &none        &none          &kp C_STOP   &kp C_PP     &kp C_MUTE
+            >;
+        };
+
+        /* NUM LAYER (Right Thumb Hold) */
+        num_layer {
+            bindings = <
+   &kp LBKT     &kp N7       &kp N8       &kp N9       &kp RBKT       &none        &none        &none        &none        &none
+   &kp SEMI     &kp N4       &kp N5       &kp N6       &kp EQUAL      &none        &kp RSHFT    &kp RCTRL    &kp RALT     &kp RGUI
+   &kp GRAVE    &kp N1       &kp N2       &kp N3       &kp BSLH       &none        &none        &none        &none        &none
+                             &kp DOT      &kp N0       &kp MINUS      &none        &none        &none
+            >;
+        };
+
+        /* SYM LAYER (Right Thumb Inner Hold) */
+        sym_layer {
+            bindings = <
+   &kp LBRC     &kp AMPS     &kp STAR     &kp LPAR     &kp RBRC       &none        &none        &none        &none        &none
+   &kp COLON    &kp DLLR     &kp PRCNT    &kp CARET    &kp PLUS       &none        &kp RSHFT    &kp RCTRL    &kp RALT     &kp RGUI
+   &kp TILDE    &kp EXCL     &kp AT       &kp HASH     &kp PIPE       &none        &none        &none        &none        &none
+                             &kp LPAR     &kp RPAR     &kp UNDER      &none        &none        &none
+            >;
+        };
+
+        /* FUN LAYER (Right Thumb Outer Hold) */
+        fun_layer {
+            bindings = <
+   &kp F12      &kp F7       &kp F8       &kp F9       &kp PSCRN      &none        &none        &none        &none        &none
+   &kp F11      &kp F4       &kp F5       &kp F6       &kp SLCK       &none        &kp RSHFT    &kp RCTRL    &kp RALT     &kp RGUI
+   &kp F10      &kp F1       &kp F2       &kp F3       &kp PAUSE_BREAK &none       &none        &none        &none        &none
+                             &kp K_APP    &kp SPACE    &kp TAB        &none        &none        &none
             >;
         };
     };
